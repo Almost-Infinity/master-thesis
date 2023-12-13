@@ -1,0 +1,21 @@
+.mt-toolbar {
+  padding: 0 64px;
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+}
+
+.app-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &__title {
+    font-variant: small-caps;
+  }
+}
+
+.layout {
+  padding: 0 64px;
+}
