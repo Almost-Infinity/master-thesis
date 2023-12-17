@@ -1,0 +1,78 @@
+<div class="catalog-toolbar">
+  <div class="catalog-toolbar__section">
+    <button mat-stroked-button color="primary" (click)="onFiltersClick()">
+      <mat-icon>tune</mat-icon>
+      Фільтри
+    </button>
+
+    <button mat-stroked-button #sortingOverlayOrigin>
+      <mat-icon>expand_more</mat-icon>
+      Сортування
+    </button>
+
+    <input class="mt-input" type="text" placeholder="Глобальний пошук..." style="width: 333px;">
+  </div>
+
+  <div class="catalog-toolbar__spacer"></div>
+
+  <mat-button-toggle-group #viewType="matButtonToggleGroup">
+    <mat-button-toggle
+      value="list"
+      (change)="onViewTypeChange($event)"
+      [checked]="viewTypeRouterParam === 'list' || true"
+      aria-label="List view"
+    >
+      <mat-icon color="primary">view_list</mat-icon>
+    </mat-button-toggle>
+
+    <mat-button-toggle value="cards"
+                       (change)="onViewTypeChange($event)"
+                       [checked]="viewTypeRouterParam === 'cards' || false"
+                       aria-label="Cards view"
+    >
+      <mat-icon color="primary">view_agenda</mat-icon>
+    </mat-button-toggle>
+
+    <mat-button-toggle value="grid"
+                       (change)="onViewTypeChange($event)"
+                       [checked]="viewTypeRouterParam === 'grid' || false"
+                       aria-label="Grid view"
+    >
+      <mat-icon color="primary">grid_view</mat-icon>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+@switch (viewType.value) {
+  @case ('list') {
+    @defer {
+      <mt-list-view [data]="data"></mt-list-view>
+    }
+  }
+  @case ('cards') {
+    @defer {
+      <mt-cards-view [data]="data"></mt-cards-view>
+    }
+  }
+  @case ('grid') {
+    @defer {
+      <mt-grid-view [data]="data"></mt-grid-view>
+    }
+  }
+}
+
+<!-- Filters overlay -->
+<mt-filters-panel [(open)]="isFilterPanelOpen"></mt-filters-panel>
+
+<!-- Sorting dropdown overlay -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="sortingOverlayOrigin._elementRef"
+  [cdkConnectedOverlayOpen]="true"
+>
+  <!--<mat-select>
+    <mat-select-trigger></mat-select-trigger>
+    <mat-option>123</mat-option>
+    <mat-option>12333</mat-option>
+  </mat-select>-->
+</ng-template>

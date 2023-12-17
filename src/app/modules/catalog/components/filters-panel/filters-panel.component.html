@@ -1,0 +1,260 @@
+<ng-template
+  cdkConnectedOverlay
+  cdkConnectedOverlayPanelClass="mt-overlay-pane"
+  [cdkConnectedOverlayOrigin]="documentElement"
+  [cdkConnectedOverlayPositions]="overlayPositions"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayOpen]="open"
+>
+  <div @panelOpenAnimation class="mt-filters-panel">
+    <mat-toolbar>
+      <span>Фільтри</span>
+
+      <div class="mt-filters-panel__spacer"></div>
+
+      <button mat-icon-button (click)="onCloseClick()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <div class="mt-filters-panel__body">
+      <div class="mt-filters-panel__scrollable">
+        <form [formGroup]="filtersForm">
+          @if (filtersForm.get('beer_name'); as beer_name) {
+            <div class="mt-filters-panel__section">
+              <h6 class="mt-filters-panel__section-title">
+                <span>Назва</span>
+
+                @if (beer_name.dirty) {
+                  <span class="mt-filters-panel__section-reset" (click)="beer_name.reset();">Скинути</span>
+                }
+              </h6>
+
+              <div class="mt-filters-panel__section-body">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Назва</mat-label>
+                  <input matInput placeholder="Назва" [formControl]="$any(beer_name)">
+                </mat-form-field>
+              </div>
+            </div>
+          }
+
+          <mat-divider></mat-divider>
+
+          <!-- TODO: Find a better solution to make the conditions below inline -->
+          @if (filtersForm.get('abv_gt');as abv_gt) {
+            @if (filtersForm.get('abv_lt');as abv_lt) {
+              <div class="mt-filters-panel__section">
+                <h6 class="mt-filters-panel__section-title">
+                  <span>Міцність (%)</span>
+
+                  @if (abv_gt.dirty || abv_lt.dirty) {
+                    <span class="mt-filters-panel__section-reset"
+                          (click)="
+                            abv_gt.reset();
+                            abv_lt.reset();
+                            abvSelect.value = null;
+                          ">
+                      Скинути
+                    </span>
+                  }
+                </h6>
+
+                <div class="mt-filters-panel__section-body">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Вид алкоголю</mat-label>
+                    <mat-select #abvSelect (selectionChange)="
+                      abv_gt.setValue($event.value.lowest);
+                      abv_lt.setValue($event.value.highest);
+                      abv_gt.markAsDirty();
+                      abv_lt.markAsDirty();
+                    ">
+                      @for (abvLevel of ABV_LEVELS;track abvLevel.drink) {
+                        <mat-option [value]="abvLevel">
+                          {{ abvLevel.drink }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-slider min="0"
+                              max="100"
+                              step="0.5"
+                              discrete
+                              showTickMarks
+                              [displayWith]="SLIDER_LABEL_FORMATTER"
+                              style="width: calc(100% - 16px)">
+                    <input matSliderStartThumb [formControl]="$any(abv_gt)">
+                    <input matSliderEndThumb [formControl]="$any(abv_lt)">
+                  </mat-slider>
+                </div>
+              </div>
+            }
+          }
+
+          <mat-divider></mat-divider>
+
+          <!-- TODO: Find a better solution to make the conditions below inline -->
+          @if (filtersForm.get('ibu_gt');as ibu_gt) {
+            @if (filtersForm.get('ibu_lt');as ibu_lt) {
+              <div class="mt-filters-panel__section">
+                <h6 class="mt-filters-panel__section-title">
+                  <span>Гіркота (IBU)</span>
+
+                  @if (ibu_gt.dirty || ibu_lt.dirty) {
+                    <span class="mt-filters-panel__section-reset"
+                          (click)="
+                            ibu_gt.reset();
+                            ibu_lt.reset();
+                            ibuSelect.value = null;
+                          ">
+                      Скинути
+                    </span>
+                  }
+                </h6>
+
+                <div class="mt-filters-panel__section-body">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Вид алкоголю</mat-label>
+                    <mat-select #ibuSelect (selectionChange)="
+                      ibu_gt.setValue($event.value.lowest);
+                      ibu_lt.setValue($event.value.highest);
+                      ibu_gt.markAsDirty();
+                      ibu_lt.markAsDirty();
+                    ">
+                      @for (ibuLevel of IBU_LEVELS;track ibuLevel.style) {
+                        <mat-option [value]="ibuLevel">
+                          {{ ibuLevel.style }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-slider min="0"
+                              max="120"
+                              step="1"
+                              discrete
+                              showTickMarks
+                              [displayWith]="SLIDER_LABEL_FORMATTER"
+                              style="width: calc(100% - 16px)">
+                    <input matSliderStartThumb [formControl]="$any(ibu_gt)">
+                    <input matSliderEndThumb [formControl]="$any(ibu_lt)">
+                  </mat-slider>
+                </div>
+              </div>
+            }
+          }
+
+          <mat-divider></mat-divider>
+
+          <!-- TODO: Find a better solution to make the conditions below inline -->
+          @if (filtersForm.get('ebc_gt');as ebc_gt) {
+            @if (filtersForm.get('ebc_lt');as ebc_lt) {
+              <div class="mt-filters-panel__section">
+                <h6 class="mt-filters-panel__section-title">
+                  <span>Колір (EBC)</span>
+
+                  @if (ebc_gt.dirty || ebc_lt.dirty) {
+                    <span class="mt-filters-panel__section-reset"
+                          (click)="
+                            ebc_gt.reset();
+                            ebc_lt.reset();
+                            ibuSelect.value = null;
+                          ">
+                      Скинути
+                    </span>
+                  }
+                </h6>
+
+                <div class="mt-filters-panel__section-body">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Вид алкоголю</mat-label>
+                    <mat-select #ibuSelect (selectionChange)="
+                      ebc_gt.setValue($event.value.lowest);
+                      ebc_lt.setValue($event.value.highest);
+                      ebc_gt.markAsDirty();
+                      ebc_lt.markAsDirty();
+                    ">
+                      @for (ibuLevel of EBC_LEVELS;track ibuLevel.style) {
+                        <mat-option [value]="ibuLevel">
+                          {{ ibuLevel.style }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-slider min="0"
+                              max="400"
+                              step="1"
+                              discrete
+                              showTickMarks
+                              [displayWith]="SLIDER_LABEL_FORMATTER"
+                              style="width: calc(100% - 16px)">
+                    <input matSliderStartThumb [formControl]="$any(ebc_gt)">
+                    <input matSliderEndThumb [formControl]="$any(ebc_lt)">
+                  </mat-slider>
+                </div>
+              </div>
+            }
+          }
+
+          <mat-divider></mat-divider>
+
+          @if (filtersForm.get('brewed_after');as brewed_after) {
+            <div class="mt-filters-panel__section">
+              <h6 class="mt-filters-panel__section-title">
+                <span>Створено після</span>
+
+                @if (brewed_after.dirty) {
+                  <span class="mt-filters-panel__section-reset" (click)="brewed_after.reset()">Скинути</span>
+                }
+              </h6>
+
+              <div class="mt-filters-panel__section-body">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Створено після</mat-label>
+                  <input matInput [matDatepicker]="dp" [formControl]="$any(brewed_after)">
+                  <mat-hint>ММ/РРРР</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp
+                                  startView="multi-year"
+                                  (monthSelected)="setMonthAndYear($event, brewed_after, dp)">
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          }
+
+          <mat-divider></mat-divider>
+
+          @if (filtersForm.get('brewed_before');as brewed_before) {
+            <div class="mt-filters-panel__section">
+              <h6 class="mt-filters-panel__section-title">
+                <span>Створено до</span>
+
+                @if (brewed_before.dirty) {
+                  <span class="mt-filters-panel__section-reset" (click)="brewed_before.reset()">Скинути</span>
+                }
+              </h6>
+
+              <div class="mt-filters-panel__section-body">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Створено до</mat-label>
+                  <input matInput [matDatepicker]="dp" [formControl]="$any(brewed_before)">
+                  <mat-hint>ММ/РРРР</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp
+                                  startView="multi-year"
+                                  (monthSelected)="setMonthAndYear($event, brewed_before, dp)">
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          }
+        </form>
+
+        <pre>{{ filtersForm.value | json }}</pre>
+      </div>
+    </div>
+  </div>
+</ng-template>

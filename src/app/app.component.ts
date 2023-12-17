@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   standalone: true,
   imports: [ NxWelcomeComponent, RouterModule, MatToolbarModule, MatButtonModule, MatIconModule ],
-  selector: 'master-thesis-root',
+  selector: 'mt-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
