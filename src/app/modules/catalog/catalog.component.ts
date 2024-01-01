@@ -52,7 +52,7 @@ export class CatalogComponent implements OnInit {
     this.punkService.getPaginated({
       page: 1,
       per_page: 2,
-      abv_gt: 50,
+      abv_gt: 50
     }).subscribe((result) => {
       // console.log('BEEEEEEER:', result);
     });

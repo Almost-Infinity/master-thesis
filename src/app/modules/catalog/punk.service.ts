@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Beer } from '../../core/types';
+import { environment } from '../../../environments/environment';
 
 interface GetPaginatedParams {
   // Pagination
@@ -27,7 +28,7 @@ interface GetPaginatedParams {
 
 @Injectable({ providedIn: 'root' })
 export class PunkService {
-  private readonly baseURL = 'https://api.punkapi.com/v2';
+  private readonly baseURL = environment.punkAPIBase;
 
   constructor(private readonly http: HttpClient) {
   }

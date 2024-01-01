@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-@use '@angular/material' as mat;
 
 html, body {
   height: 100%;
@@ -8,6 +7,10 @@ html, body {
 body {
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .mt-input {
@@ -18,7 +21,7 @@ body {
   --mt-input-placeholder-color: #aaa;
 
   color: var(--mt-input-value-color);
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
   font-size: var(--mt-input-font-size);
   text-indent: 8px;
   height: var(--mt-input-container-height);

@@ -1,0 +1,21 @@
+.mt-header {
+  display: block;
+  padding: 0 64px;
+  height: 64px;
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    & > span {
+      font-size: 1.5em;
+      font-weight: 700;
+      font-variant: small-caps;
+    }
+  }
+}

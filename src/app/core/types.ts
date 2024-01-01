@@ -1,3 +1,9 @@
+export interface Environment {
+  appName: string;
+  punkAPIBase: string;
+  resourceBase: string;
+}
+
 export interface BeerVolume {
   value: number;
   unit: string; // liters, celsius, kilograms
@@ -37,8 +43,26 @@ export interface Beer {
   volume: BeerVolume;
   boil_volume: BeerVolume;
   method: Record<BeerMethodName, BeerMethod | BeerMethod[] | null>;
-  ingredients: Record<BeerIngredientName, BeerIngredient | BeerIngredient[] | string>;
+  ingredients: Record<BeerIngredientName, BeerIngredient | BeerIngredient[] | string | null>;
   food_pairing: string[];
   brewers_tips: string;
   contributed_by: string;
+}
+
+export interface ABV {
+  drink: string;
+  lowest: number;
+  highest: number;
+}
+
+export interface EBC {
+  style: string;
+  lowest: number;
+  highest: number;
+}
+
+export interface IBU {
+  style: string;
+  lowest: number;
+  highest: number;
 }

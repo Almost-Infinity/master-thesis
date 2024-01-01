@@ -1,0 +1,8 @@
+.mt-layout {
+  &__content {
+    padding: 16px 64px;
+    height: calc(100% - 64px);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+}
