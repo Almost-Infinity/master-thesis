@@ -1,14 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  EventEmitter,
-  inject,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  ViewEncapsulation
-} from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -21,10 +11,12 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } f
 import { MatSliderModule } from '@angular/material/slider';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Filters, RecordToTypedFormControls } from './types';
 import { MatInputModule } from '@angular/material/input';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -32,11 +24,8 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/mat
 // the `default as` syntax.
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-import { ABVLevels } from './abv-levels';
-import { IBULevels } from './ibu-levels';
-import { EBCLevels } from './ebc-levels';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatDividerModule } from '@angular/material/divider';
+import { ResourceService } from './resource.service';
+import { FetchPipe } from './fetch.pipe';
 
 const moment = _rollupMoment || _moment;
 
@@ -55,8 +44,9 @@ const moment = _rollupMoment || _moment;
     MatSliderModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatExpansionModule,
-    MatDividerModule
+    MatDividerModule,
+    MatAutocompleteModule,
+    FetchPipe
   ],
   providers: [
     {
@@ -84,30 +74,22 @@ const moment = _rollupMoment || _moment;
   styleUrl: './filters-panel.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class FiltersPanelComponent implements OnInit, OnChanges {
+export class FiltersPanelComponent implements OnInit {
   private readonly overlay = inject(Overlay);
   private readonly documentRef = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  readonly resourceService = inject(ResourceService);
 
-  readonly ABV_LEVELS = ABVLevels;
-  readonly IBU_LEVELS = IBULevels;
-  readonly EBC_LEVELS = EBCLevels;
   readonly SLIDER_LABEL_FORMATTER = (n: number) => n.toFixed(1);
 
   @Input()
-  source: Subject<Filters> = new Subject<Filters>();
-
-  @Input()
   open: boolean = false;
-
-  @Input()
-  filters?: Filters;
 
   @Output()
   openChange = new EventEmitter<boolean>();
 
   @Output()
-  filtersChange = new EventEmitter<Filters>();
+  filterChange = new EventEmitter<Filters>();
 
   readonly overlayPositions: ConnectedPosition[] = [
     {
@@ -144,14 +126,10 @@ export class FiltersPanelComponent implements OnInit, OnChanges {
     this.filtersForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe((value) => {
-      console.log('form', value);
+      this.filterChange.next(value as Required<typeof value>);
     });
-  }
-
-  ngOnChanges(): void {
-    this.filters && this.filtersForm.patchValue(this.filters);
   }
 
   onCloseClick(): void {

@@ -20,7 +20,7 @@
     <div class="mt-filters-panel__body">
       <div class="mt-filters-panel__scrollable">
         <form [formGroup]="filtersForm">
-          @if (filtersForm.get('beer_name'); as beer_name) {
+          @if (filtersForm.get('beer_name');as beer_name) {
             <div class="mt-filters-panel__section">
               <h6 class="mt-filters-panel__section-title">
                 <span>Назва</span>
@@ -69,10 +69,8 @@
                       abv_gt.markAsDirty();
                       abv_lt.markAsDirty();
                     ">
-                      @for (abvLevel of ABV_LEVELS;track abvLevel.drink) {
-                        <mat-option [value]="abvLevel">
-                          {{ abvLevel.drink }}
-                        </mat-option>
+                      @for (ABV of resourceService.getABV() | mtFetch;track ABV.drink) {
+                        <mat-option [value]="ABV">{{ ABV.drink }}</mat-option>
                       }
                     </mat-select>
                   </mat-form-field>
@@ -122,9 +120,9 @@
                       ibu_gt.markAsDirty();
                       ibu_lt.markAsDirty();
                     ">
-                      @for (ibuLevel of IBU_LEVELS;track ibuLevel.style) {
-                        <mat-option [value]="ibuLevel">
-                          {{ ibuLevel.style }}
+                      @for (IBU of resourceService.getIBU() | mtFetch;track IBU.style) {
+                        <mat-option [value]="IBU">
+                          {{ IBU.style }}
                         </mat-option>
                       }
                     </mat-select>
@@ -175,9 +173,9 @@
                       ebc_gt.markAsDirty();
                       ebc_lt.markAsDirty();
                     ">
-                      @for (ibuLevel of EBC_LEVELS;track ibuLevel.style) {
-                        <mat-option [value]="ibuLevel">
-                          {{ ibuLevel.style }}
+                      @for (EBC of resourceService.getEBC() | mtFetch;track EBC.style) {
+                        <mat-option [value]="EBC">
+                          {{ EBC.style }}
                         </mat-option>
                       }
                     </mat-select>
@@ -247,6 +245,130 @@
                                   startView="multi-year"
                                   (monthSelected)="setMonthAndYear($event, brewed_before, dp)">
                   </mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          }
+
+          <mat-divider></mat-divider>
+
+          @if (filtersForm.get('yeast');as yeast) {
+            <div class="mt-filters-panel__section">
+              <h6 class="mt-filters-panel__section-title">
+                <span>Дріжжі</span>
+
+                @if (yeast.dirty) {
+                  <span class="mt-filters-panel__section-reset" (click)="yeast.reset()">Скинути</span>
+                }
+              </h6>
+
+              <div class="mt-filters-panel__section-body">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Дріжжі</mat-label>
+                  <input type="text"
+                         placeholder="Дріжжі"
+                         aria-label="Дріжжі"
+                         matInput
+                         [formControl]="$any(yeast)"
+                         [matAutocomplete]="yeastAuto">
+                  <mat-autocomplete #yeastAuto="matAutocomplete">
+                    @for (yeast of resourceService.getYeast() | mtFetch;track yeast) {
+                      <mat-option [value]="yeast">{{ yeast }}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+          }
+
+          <mat-divider></mat-divider>
+
+          @if (filtersForm.get('hops');as hops) {
+            <div class="mt-filters-panel__section">
+              <h6 class="mt-filters-panel__section-title">
+                <span>Хміль</span>
+
+                @if (hops.dirty) {
+                  <span class="mt-filters-panel__section-reset" (click)="hops.reset()">Скинути</span>
+                }
+              </h6>
+
+              <div class="mt-filters-panel__section-body">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Хміль</mat-label>
+                  <input type="text"
+                         placeholder="Хміль"
+                         aria-label="Хміль"
+                         matInput
+                         [formControl]="$any(hops)"
+                         [matAutocomplete]="hopsAuto">
+                  <mat-autocomplete #hopsAuto="matAutocomplete">
+                    @for (hops of resourceService.getHops() | mtFetch;track hops) {
+                      <mat-option [value]="hops">{{ hops }}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+          }
+
+          <mat-divider></mat-divider>
+
+          @if (filtersForm.get('malt');as malt) {
+            <div class="mt-filters-panel__section">
+              <h6 class="mt-filters-panel__section-title">
+                <span>Солод</span>
+
+                @if (malt.dirty) {
+                  <span class="mt-filters-panel__section-reset" (click)="malt.reset()">Скинути</span>
+                }
+              </h6>
+
+              <div class="mt-filters-panel__section-body">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Солод</mat-label>
+                  <input type="text"
+                         placeholder="Солод"
+                         aria-label="Солод"
+                         matInput
+                         [formControl]="$any(malt)"
+                         [matAutocomplete]="maltAuto">
+                  <mat-autocomplete #maltAuto="matAutocomplete">
+                    @for (malt of resourceService.getMalt() | mtFetch;track malt) {
+                      <mat-option [value]="malt">{{ malt }}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+          }
+
+          <mat-divider></mat-divider>
+
+          @if (filtersForm.get('food');as food) {
+            <div class="mt-filters-panel__section">
+              <h6 class="mt-filters-panel__section-title">
+                <span>Поєднується з їжею</span>
+
+                @if (food.dirty) {
+                  <span class="mt-filters-panel__section-reset" (click)="food.reset()">Скинути</span>
+                }
+              </h6>
+
+              <div class="mt-filters-panel__section-body">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Поєднується з їжею</mat-label>
+                  <input type="text"
+                         placeholder="Поєднується з їжею"
+                         aria-label="Поєднується з їжею"
+                         matInput
+                         [formControl]="$any(food)"
+                         [matAutocomplete]="foodAuto">
+                  <mat-autocomplete #foodAuto="matAutocomplete">
+                    @for (food of resourceService.getFood() | mtFetch;track food) {
+                      <mat-option [value]="food">{{ food }}</mat-option>
+                    }
+                  </mat-autocomplete>
                 </mat-form-field>
               </div>
             </div>
