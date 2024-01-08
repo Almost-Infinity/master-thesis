@@ -1,4 +1,4 @@
-import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, ViewEncapsulation } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -10,8 +10,6 @@ import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Filters, RecordToTypedFormControls } from './types';
 import { MatInputModule } from '@angular/material/input';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -26,6 +24,7 @@ import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { ResourceService } from './resource.service';
 import { FetchPipe } from './fetch.pipe';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 const moment = _rollupMoment || _moment;
 
@@ -74,10 +73,9 @@ const moment = _rollupMoment || _moment;
   styleUrl: './filters-panel.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class FiltersPanelComponent implements OnInit {
+export class FiltersPanelComponent {
   private readonly overlay = inject(Overlay);
   private readonly documentRef = inject(DOCUMENT);
-  private readonly destroyRef = inject(DestroyRef);
   readonly resourceService = inject(ResourceService);
 
   readonly SLIDER_LABEL_FORMATTER = (n: number) => n.toFixed(1);
@@ -89,7 +87,12 @@ export class FiltersPanelComponent implements OnInit {
   openChange = new EventEmitter<boolean>();
 
   @Output()
-  filterChange = new EventEmitter<Filters>();
+  get filterChange() {
+    return this.filtersForm.valueChanges.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+    );
+  };
 
   readonly overlayPositions: ConnectedPosition[] = [
     {
@@ -120,16 +123,6 @@ export class FiltersPanelComponent implements OnInit {
 
   get documentElement(): HTMLElement {
     return this.documentRef.documentElement;
-  }
-
-  ngOnInit() {
-    this.filtersForm.valueChanges.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe((value) => {
-      this.filterChange.next(value as Required<typeof value>);
-    });
   }
 
   onCloseClick(): void {

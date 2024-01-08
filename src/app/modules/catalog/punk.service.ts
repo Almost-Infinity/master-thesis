@@ -33,7 +33,7 @@ export class PunkService {
   constructor(private readonly http: HttpClient) {
   }
 
-  getPaginated(params: GetPaginatedParams): Observable<Beer[]> {
+  getPaginated(params?: GetPaginatedParams): Observable<Beer[]> {
     return this.http.get<Beer[]>(this.baseURL + '/beers' + this.serializeQueryParams(params));
   }
 
@@ -48,6 +48,6 @@ export class PunkService {
       return '';
     }
 
-    return '?' + Object.keys(params).map((key) => key + '=' + params[key]).join('&');
+    return '?' + Object.keys(params).filter((key) => params[key]).map((key) => key + '=' + params[key]).join('&');
   }
 }
